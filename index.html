@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>PrzedRemontem — skan 3D, pomiary i kosztorysy</title>
+<title>PrzedRemontem — Najpierw policz. Potem remontuj.</title>
 <meta name="description" content="Skanowanie 3D mieszkań i domów, pomiary, przedmiary robót i wstępne kosztorysy. Katowice, Gliwice i Zagłębie.">
 <style>
 :root{
@@ -515,6 +515,53 @@ h1{font-size:clamp(2.65rem,5.8vw,5rem);line-height:1.02;margin:14px 0 16px}
 .compact-footer .footer-bottom{padding-top:12px;display:flex;flex-direction:row;align-items:center;justify-content:space-between;font-size:.74rem;gap:12px}
 .compact-footer .footer-bottom a{color:#aeb5bc;text-decoration:none}
 @media(max-width:760px){.compact-footer{padding:20px 0 16px}.compact-footer .footer-main{align-items:flex-start}.compact-footer .footer-identity{display:flex;flex-direction:column;gap:5px}.compact-footer .footer-brand{font-size:.96rem}.compact-footer .footer-tagline{font-size:.73rem}.compact-footer .footer-bottom{flex-direction:row;align-items:center;flex-wrap:wrap}.compact-footer .back-top{font-size:.79rem}}
+
+/* V23: compact mobile menu; V21 hero unchanged */
+.mobile-menu-toggle,.mobile-menu{display:none}
+@media(max-width:760px){
+  .mobile-menu-toggle{display:flex;align-items:center;justify-content:center;width:42px;height:42px;flex:0 0 42px;padding:0;border:1px solid rgba(255,255,255,.18);border-radius:10px;background:transparent;color:#fff;cursor:pointer}
+  .mobile-menu-toggle svg{width:21px;height:21px;stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none}
+  .mobile-menu-toggle .close-icon{display:none}
+  .mobile-menu-toggle[aria-expanded="true"] .open-icon{display:none}
+  .mobile-menu-toggle[aria-expanded="true"] .close-icon{display:block}
+  .mobile-menu{display:block;position:absolute;left:0;right:0;top:100%;background:#101317;border-bottom:1px solid rgba(255,255,255,.12);box-shadow:0 14px 24px rgba(0,0,0,.2)}
+  .mobile-menu[hidden]{display:none}
+  header{position:sticky}
+  .mobile-menu-inner{padding:8px 0 12px}
+  .mobile-menu a{display:flex;align-items:center;justify-content:space-between;padding:15px 3px;color:#f6f6f6;text-decoration:none;font-size:1rem;font-weight:650}
+  .mobile-menu a+a{border-top:1px solid rgba(255,255,255,.09)}
+  .mobile-menu a::after{content:"";width:7px;height:7px;border-right:2px solid #ff870e;border-bottom:2px solid #ff870e;transform:rotate(-45deg);margin-right:5px}
+}
+
+/* V24 — neutral graphite palette; V21 hero geometry and V23 mobile menu preserved */
+:root{
+ --bg:#101010;--panel:#1d1d1d;--panel2:#191919;
+ --text:#f5f5f5;--muted:#b8b8b8;--line:#343434;
+ --orange:#ff8200;--amber:#ffad54;
+ --blue:#ff8200;--blue-soft:rgba(255,130,0,.08);
+ --green:#ff8200;--green-soft:rgba(255,130,0,.08);
+ --orange-soft:rgba(255,130,0,.09);
+}
+body{background:var(--bg)}
+header{background:rgba(16,16,16,.94);border-bottom-color:#292929}
+.starting{background:#1d1d1d;border-color:#3a3a3a}
+.starting:after{background:rgba(255,130,0,.065)}
+.card,.price-card{background:#1d1d1d;border-color:#343434}
+.card.blue:before,.card.green:before{background:#5b5b5b}
+.card.orange:before{background:var(--orange)}
+#dla-kogo,#uslugi,#cennik{background:transparent}
+.kicker-blue,.kicker-green{color:#e8e8e8;background:#242424;border-color:#383838}
+.kicker-orange{color:#ffbf7d;background:rgba(255,130,0,.08);border-color:#493525}
+.price-card.featured{background:#202020;border-color:#76502d}
+.price-card.featured:after{background:var(--orange)}
+.contactbox{background:#1d1d1d;border-color:#383838}
+.benefit{background:#1d1d1d;border-color:#343434;color:#dadada}
+.card .mini{color:#dedede}
+.mobile-menu{background:#191919!important;border-bottom-color:#353535!important}
+.mobile-menu a::after{border-color:var(--orange)!important}
+/* Keep small orange accents, remove warm tinted surfaces */
+.audience-item,.deliverable{background:#1d1d1d!important;border-color:#343434!important}
+
 </style>
 </head>
 <body>
@@ -529,7 +576,14 @@ h1{font-size:clamp(2.65rem,5.8vw,5rem);line-height:1.02;margin:14px 0 16px}
         <a href="#cennik">Cennik</a>
         <a href="#kontakt">Kontakt</a>
       </div>
+      <button class="mobile-menu-toggle" type="button" aria-label="Otwórz menu" aria-expanded="false" aria-controls="mobile-menu">
+        <svg class="open-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        <svg class="close-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+      </button>
     </nav>
+  </div>
+  <div class="mobile-menu" id="mobile-menu" hidden>
+    <div class="wrap mobile-menu-inner"><a href="#cennik">Cennik</a><a href="#kontakt">Kontakt</a></div>
   </div>
 </header>
 
@@ -656,5 +710,18 @@ h1{font-size:clamp(2.65rem,5.8vw,5rem);line-height:1.02;margin:14px 0 16px}
   </div>
 </footer>
 
+<script>
+(function(){
+  const button=document.querySelector('.mobile-menu-toggle');
+  const menu=document.getElementById('mobile-menu');
+  if(!button||!menu)return;
+  function setOpen(open){menu.hidden=!open;button.setAttribute('aria-expanded',String(open));button.setAttribute('aria-label',open?'Zamknij menu':'Otwórz menu');}
+  button.addEventListener('click',()=>setOpen(menu.hidden));
+  menu.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>setOpen(false)));
+  document.addEventListener('keydown',event=>{if(event.key==='Escape')setOpen(false)});
+  document.addEventListener('click',event=>{if(!menu.hidden&&!menu.contains(event.target)&&!button.contains(event.target))setOpen(false)});
+  window.matchMedia('(min-width: 761px)').addEventListener('change',event=>{if(event.matches)setOpen(false)});
+})();
+</script>
 </body>
 </html>
